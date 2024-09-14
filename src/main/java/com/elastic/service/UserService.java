@@ -19,8 +19,8 @@ public class UserService {
 		return userRepository.save(user);
 	}
 
-	public List<User> searchUsersByQuery(String query) { // Renamed method
-		return userRepository.searchUsersByQuery(query); // Updated repository method call
+	public List<User> searchUsersByQuery(String query) {
+		return userRepository.searchUsersByQuery(query);
 	}
 
 	public Iterable<User> findAllUsers() {

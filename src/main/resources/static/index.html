@@ -84,6 +84,12 @@
 			max-width: 1000px;
 			margin-top: 20px;
 		}
+
+		mark {
+			background-color: yellow;
+			color: black;
+			font-weight: bold;
+		}
 	</style>
 </head>
 <body>
@@ -92,31 +98,26 @@
 <h2>Search via Elasticsearch</h2>
 
 <div class="container">
-	<!-- Updated placeholder to reflect multi-field search -->
 	<input type="text" id="searchInputES" placeholder="Search by username, email, LinkedIn, GitHub, or Twitter..." onkeyup="searchUsersES()">
 	<div id="resultsES"></div>
 </div>
 
 <script>
-	// Search via Elasticsearch (changed 'username' to 'query')
-	async function searchUsersES() {
-		const query = document.getElementById('searchInputES').value;
-		if (query.length > 0) {
-			const response = await fetch(`http://localhost:8080/users/search/es?query=${encodeURIComponent(query)}`);
-			const result = await response.json();
-			displayResults('resultsES', result.users, result.timeTaken);
-		} else {
-			document.getElementById('resultsES').innerHTML = '';
-		}
+	function highlightText(text, query) {
+		if (!query) return text;
+		const regex = new RegExp(`(${query})`, 'gi');
+		return text.replace(regex, '<mark>$1</mark>');
 	}
 
-	// Display search results as table
 	function displayResults(divId, users, timeTaken) {
 		const resultsDiv = document.getElementById(divId);
 		if (users.length === 0) {
 			resultsDiv.innerHTML = '<p>No users found.</p>';
 			return;
 		}
+
+		const query = document.getElementById('searchInputES').value;
+
 		let tableHTML = `
 			<p>Query executed in: ${timeTaken}</p>
 			<table>
@@ -129,20 +130,33 @@
 					<th>Twitter</th>
 				</tr>
 		`;
+
 		users.forEach(user => {
 			tableHTML += `
 				<tr>
-					<td>${user.username}</td>
-					<td>${user.email}</td>
+					<td>${highlightText(user.username, query)}</td>
+					<td>${highlightText(user.email, query)}</td>
 					<td>${user.bio}</td>
-					<td><a href="${user.linkedInUrl}" target="_blank">${user.linkedInUrl}</a></td>
-					<td><a href="${user.githubUrl}" target="_blank">${user.githubUrl}</a></td>
-					<td><a href="${user.twitterUrl}" target="_blank">${user.twitterUrl}</a></td>
+					<td><a href="${user.linkedInUrl}" target="_blank">${highlightText(user.linkedInUrl, query)}</a></td>
+					<td><a href="${user.githubUrl}" target="_blank">${highlightText(user.githubUrl, query)}</a></td>
+					<td><a href="${user.twitterUrl}" target="_blank">${highlightText(user.twitterUrl, query)}</a></td>
 				</tr>
 			`;
 		});
+
 		tableHTML += '</table>';
 		resultsDiv.innerHTML = tableHTML;
+	}
+
+	async function searchUsersES() {
+		const query = document.getElementById('searchInputES').value;
+		if (query.length > 0) {
+			const response = await fetch(`http://localhost:8080/users/search/es?query=${encodeURIComponent(query)}`);
+			const result = await response.json();
+			displayResults('resultsES', result.users, result.timeTaken);
+		} else {
+			document.getElementById('resultsES').innerHTML = '';
+		}
 	}
 </script>
 </body>
