@@ -9,6 +9,12 @@ import com.elastic.entity.User;
 
 
 public interface UserRepository extends ElasticsearchRepository<User, String> {
-	@Query("{\"wildcard\": {\"username\": \"*?0*\"}}")
-	List<User> findByUsernameContaining(String username);
+	@Query("{ \"bool\": { \"should\": [ " +
+			"{ \"wildcard\": { \"username\": \"*?0*\" } }, " +
+			"{ \"wildcard\": { \"email\": \"*?0*\" } }, " +
+			"{ \"wildcard\": { \"linkedInUrl\": \"*?0*\" } }, " +
+			"{ \"wildcard\": { \"githubUrl\": \"*?0*\" } }, " +
+			"{ \"wildcard\": { \"twitterUrl\": \"*?0*\" } } " +
+			"] } }")
+	List<User> searchUsersByQuery(String query);
 }

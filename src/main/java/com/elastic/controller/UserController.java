@@ -27,9 +27,9 @@ public class UserController {
 	}
 
 	@GetMapping("/search/es")
-	public Map<String, Object> searchByUsernameElasticsearch(@RequestParam String username) {
+	public Map<String, Object> searchUsersElasticsearch(@RequestParam String query) {
 		long startTime = System.currentTimeMillis();
-		List<User> users = userService.searchByUsername(username);
+		List<User> users = userService.searchUsersByQuery(query); // Updated method call
 		long endTime = System.currentTimeMillis();
 
 		Map<String, Object> response = new HashMap<>();

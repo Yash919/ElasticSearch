@@ -92,16 +92,17 @@
 <h2>Search via Elasticsearch</h2>
 
 <div class="container">
-	<input type="text" id="searchInputES" placeholder="Search by username..." onkeyup="searchUsersES()">
+	<!-- Updated placeholder to reflect multi-field search -->
+	<input type="text" id="searchInputES" placeholder="Search by username, email, LinkedIn, GitHub, or Twitter..." onkeyup="searchUsersES()">
 	<div id="resultsES"></div>
 </div>
 
 <script>
-	// Search via Elasticsearch
+	// Search via Elasticsearch (changed 'username' to 'query')
 	async function searchUsersES() {
 		const query = document.getElementById('searchInputES').value;
 		if (query.length > 0) {
-			const response = await fetch(`http://localhost:8080/users/search/es?username=${encodeURIComponent(query)}`);
+			const response = await fetch(`http://localhost:8080/users/search/es?query=${encodeURIComponent(query)}`);
 			const result = await response.json();
 			displayResults('resultsES', result.users, result.timeTaken);
 		} else {
