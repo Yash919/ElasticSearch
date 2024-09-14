@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>User Search</title>
+	<style>
+		body {
+			font-family: Arial, sans-serif;
+			padding: 20px;
+		}
+		table {
+			width: 100%;
+			border-collapse: collapse;
+			margin-top: 20px;
+		}
+		table, th, td {
+			border: 1px solid #ddd;
+		}
+		th, td {
+			padding: 10px;
+			text-align: left;
+		}
+		th {
+			background-color: #f2f2f2;
+		}
+	</style>
+</head>
+<body>
+<h1>User Search</h1>
+
+<h2>Search via Elasticsearch</h2>
+<input type="text" id="searchInputES" placeholder="Search by username..." onkeyup="searchUsersES()">
+<div id="resultsES"></div>
+
+<script>
+	// Search via Elasticsearch
+	async function searchUsersES() {
+		const query = document.getElementById('searchInputES').value;
+		if (query.length > 0) {
+			const response = await fetch(`http://localhost:8080/users/search/es?username=${encodeURIComponent(query)}`);
+			const result = await response.json();
+			displayResults('resultsES', result.users, result.timeTaken);
+		} else {
+			document.getElementById('resultsES').innerHTML = '';
+		}
+	}
+
+	// Display search results as table
+	function displayResults(divId, users, timeTaken) {
+		const resultsDiv = document.getElementById(divId);
+		if (users.length === 0) {
+			resultsDiv.innerHTML = '<p>No users found.</p>';
+			return;
+		}
+		let tableHTML = `
+			<p>Query executed in: ${timeTaken} ms</p>
+			<table>
+				<tr>
+					<th>Username</th>
+					<th>Email</th>
+					<th>Bio</th>
+					<th>LinkedIn</th>
+					<th>GitHub</th>
+					<th>Twitter</th>
+				</tr>
+		`;
+		users.forEach(user => {
+			tableHTML += `
+				<tr>
+					<td>${user.username}</td>
+					<td>${user.email}</td>
+					<td>${user.bio}</td>
+					<td><a href="${user.linkedInUrl}" target="_blank">${user.linkedInUrl}</a></td>
+					<td><a href="${user.githubUrl}" target="_blank">${user.githubUrl}</a></td>
+					<td><a href="${user.twitterUrl}" target="_blank">${user.twitterUrl}</a></td>
+				</tr>
+			`;
+		});
+		tableHTML += '</table>';
+		resultsDiv.innerHTML = tableHTML;
+	}
+</script>
+</body>
+</html>
