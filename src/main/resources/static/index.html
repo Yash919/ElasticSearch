@@ -8,30 +8,93 @@
 		body {
 			font-family: Arial, sans-serif;
 			padding: 20px;
+			background-color: #f4f4f9;
 		}
+
+		h1 {
+			text-align: center;
+			color: #333;
+		}
+
+		h2 {
+			text-align: center;
+			color: #666;
+		}
+
+		.container {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+			margin-top: 40px;
+		}
+
+		input[type="text"] {
+			width: 50%;
+			padding: 12px 20px;
+			margin-top: 10px;
+			margin-bottom: 20px;
+			box-sizing: border-box;
+			border: 2px solid #ccc;
+			border-radius: 4px;
+			font-size: 16px;
+		}
+
 		table {
 			width: 100%;
+			max-width: 1000px;
 			border-collapse: collapse;
 			margin-top: 20px;
+			background-color: #fff;
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 		}
+
 		table, th, td {
 			border: 1px solid #ddd;
 		}
+
 		th, td {
-			padding: 10px;
+			padding: 12px;
 			text-align: left;
 		}
+
 		th {
-			background-color: #f2f2f2;
+			background-color: #4CAF50;
+			color: white;
+		}
+
+		td a {
+			color: #4CAF50;
+			text-decoration: none;
+		}
+
+		td a:hover {
+			text-decoration: underline;
+		}
+
+		p {
+			color: #555;
+			font-size: 14px;
+			text-align: center;
+			margin-bottom: 10px;
+		}
+
+		#resultsES {
+			width: 100%;
+			max-width: 1000px;
+			margin-top: 20px;
 		}
 	</style>
 </head>
 <body>
-<h1>User Search</h1>
 
+<h1>User Search</h1>
 <h2>Search via Elasticsearch</h2>
-<input type="text" id="searchInputES" placeholder="Search by username..." onkeyup="searchUsersES()">
-<div id="resultsES"></div>
+
+<div class="container">
+	<input type="text" id="searchInputES" placeholder="Search by username..." onkeyup="searchUsersES()">
+	<div id="resultsES"></div>
+</div>
 
 <script>
 	// Search via Elasticsearch
@@ -54,7 +117,7 @@
 			return;
 		}
 		let tableHTML = `
-			<p>Query executed in: ${timeTaken} ms</p>
+			<p>Query executed in: ${timeTaken}</p>
 			<table>
 				<tr>
 					<th>Username</th>
