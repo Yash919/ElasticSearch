@@ -150,14 +150,19 @@
 
 	async function searchUsersES() {
 		const query = document.getElementById('searchInputES').value;
-		if (query.length > 0) {
-			const response = await fetch(`http://localhost:8080/users/search/es?query=${encodeURIComponent(query)}`);
-			const result = await response.json();
-			displayResults('resultsES', result.users, result.timeTaken);
-		} else {
-			document.getElementById('resultsES').innerHTML = '';
-		}
+		const url = `http://localhost:8080/users/search/es?query=${encodeURIComponent(query)}`
+		const response = await fetch(url);
+		const result = await response.json();
+		displayResults('resultsES', result.users, result.timeTaken);
 	}
+
+	async function fetchAllUsers() {
+		const response = await fetch('http://localhost:8080/users');
+		const users = await response.json();
+		displayResults('resultsES', users, 'N/A');
+	}
+
+	window.onload = fetchAllUsers;
 </script>
 </body>
 </html>

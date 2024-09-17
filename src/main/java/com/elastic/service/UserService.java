@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.elastic.entity.User;
@@ -23,8 +26,10 @@ public class UserService {
 		return userRepository.searchUsersByQuery(query);
 	}
 
-	public Iterable<User> findAllUsers() {
-		return userRepository.findAll();
+	public List<User> findAllUsers() {
+		Pageable pageable = PageRequest.of(0, 100);
+		Page<User> userPage = userRepository.findAll(pageable);
+		return userPage.getContent();
 	}
 
 	public String populateUsers() {

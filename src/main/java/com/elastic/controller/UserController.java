@@ -29,7 +29,14 @@ public class UserController {
 	@GetMapping("/search/es")
 	public Map<String, Object> searchUsersElasticsearch(@RequestParam String query) {
 		long startTime = System.currentTimeMillis();
-		List<User> users = userService.searchUsersByQuery(query); // Updated method call
+		List<User> users;
+
+		if (query == null || query.trim().isEmpty()) {
+			users = userService.findAllUsers(); // Fetch all users if query is empty
+		} else {
+			users = userService.searchUsersByQuery(query); // Perform search if query is present
+		}
+
 		long endTime = System.currentTimeMillis();
 
 		Map<String, Object> response = new HashMap<>();
