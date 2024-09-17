@@ -34,7 +34,7 @@ public class UserController {
 		if (query == null || query.trim().isEmpty()) {
 			users = userService.findAllUsers(); // Fetch all users if query is empty
 		} else {
-			users = userService.searchUsersByQuery(query); // Perform search if query is present
+			users = userService.searchUsersByQuery(query.toLowerCase()); // Perform search if query is present
 		}
 
 		long endTime = System.currentTimeMillis();
