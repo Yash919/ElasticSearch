@@ -103,9 +103,21 @@
 </div>
 
 <script>
+	function escapeRegExp(string) {
+		// Escapes special characters like ., *, +, ?, etc., so they can be used in the regex.
+		return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+	}
+
 	function highlightText(text, query) {
-		if (!query) return text;
-		const regex = new RegExp(`(${query})`, 'gi');
+		if (!query) return text;  // If no query, return the original text.
+
+		// Escape special characters in the query before using in RegExp
+		const escapedQuery = escapeRegExp(query);
+
+		// Create a RegExp object to match the query globally and case-insensitively
+		const regex = new RegExp(`(${escapedQuery})`, 'gi');
+
+		// Replace the matching text with highlighted version
 		return text.replace(regex, '<mark>$1</mark>');
 	}
 
